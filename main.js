@@ -25,9 +25,19 @@ let table = [
 let c = [];
 let u = [];
 let v = [];
-let d = [];
+let d = [
+    [],
+    [],
+    []
+];
+let cNew = [];
 u[0] = 0;
 
+
+let matrica = [
+    [],
+    []
+]
 
 const createD = (arr, val1, val2) => {
     for(let i = 0; i < val1; i++) {
@@ -71,17 +81,6 @@ const createTable = (arr, betterArr, line) => {
     });
 }
 
-
-const nonSingularity = () => {
-    if((c[0].length + 2) === (c1Final.length + c2Final.length + c3Final.length)) {
-        console.log('Nevirojdennoe');
-    } else {
-        console.log('Virojdennoe');
-        c3Final.push({ index: 4, value: 0 });
-        console.log('Teper nevirojdennoe');
-    }
-}
-
 const terminatorSwitch = (lineNum, index, item) => {
     switch (lineNum) {
         case 1:
@@ -113,18 +112,6 @@ const findMinIteration = () => {
     }
 }
 
-const newOn = (u, v, c) => {
-    for (let i=0; i<3; i++) {
-        for (let j=0; j<5; j++) {
-            if(!(isNaN(c[i][j]))) {
-                if((v[j]) === 'undefined') {
-                    v[j] = c[i][j] - u[i]
-                }
-            }
-        }
-    }
-}
-
 const lineEdit = (lineNum) => {
     switch (lineNum) {
         case 1:
@@ -153,6 +140,16 @@ const rowEdit = (index) => {
         c[0][index] = 'x';
         c[1][index] = 'x';
         c[2][index] = 'x';
+    }
+}
+
+const findD = (arr) => {
+    for (let i=0; i<arr.length;i++) {
+        for (let j=0; j<arr[i].length;j++) {
+            if(arr[i][j] > 0) {
+                matrica[0][0] = arr[i][j];
+            }
+        }
     }
 }
 
@@ -267,8 +264,24 @@ async function log() {
             console.log(a);
             console.log(b);
             console.log(c);
+            cNew = [...c];
+            v[0] = cNew[0][0] - u[0];
+            v[1] = cNew[0][1] - u[0];
+            u[1] = cNew[1][1] - v[1];
+            v[2] = cNew[1][2] - u[1];
+            v[4] = cNew[0][4] - u[0];
+            u[2] = cNew[2][4] - v[4];
+            v[3] = cNew[2][3] - u[2];
+            d[0][2] = v[2] + u[0] - c[0][2];
+            d[0][3] = v[3] + u[0] - c[0][3];
+            d[1][0] = v[0] + u[1] - c[1][0];
+            d[1][3] = v[3] + u[1] - c[1][3];
+            d[1][4] = v[4] + u[1] - c[1][4];
+            d[2][0] = v[0] + u[2] - c[2][0];
+            d[2][1] = v[1] + u[2] - c[2][1];
+            d[2][2] = v[2] + u[2] - c[2][2];
+            findD(d);
             findMinIteration();
-            nonSingularity();
             sortArrays(c1Final);
             sortArrays(c2Final);
             sortArrays(c3Final);
@@ -277,9 +290,12 @@ async function log() {
             createTable(c2Final, table, 1);
             createTable(c3Final, table, 2);
             console.log(table);
-            newOn(u, v, c);
             console.log(u);
             console.log(v);
+            console.log(cNew);
+            console.log(d);
+            console.log(matrica);
+
         });
 }
 
