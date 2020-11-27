@@ -17,10 +17,16 @@ let cMin = 0;
 let c1Final = [];
 let c2Final = [];
 let c3Final = [];
+let table = [
+    [],
+    [],
+    []
+];
 let c = [];
 let u = [];
 let v = [];
 let d = [];
+u[0] = 0;
 
 
 const createD = (arr, val1, val2) => {
@@ -38,6 +44,31 @@ const createUV = (u, v) => {
             v[j] = c[i][j] - u[i];
         }
     }
+}
+
+
+const newC = () => {
+}
+
+
+const sortArrays = (arr) => {
+    arr.sort((a, b) => {
+        return a['index'] - b['index'];
+    });
+}
+
+const createBetterArr = (arr) => {
+    for(let i=0; i<3; i++) {
+        for(let j=0; j<5; j++) {
+            arr[i][j] = '';
+        }
+    }
+}
+
+const createTable = (arr, betterArr, line) => {
+    arr.map((item) => {
+        betterArr[line][item['index']] = item['value'];
+    });
 }
 
 
@@ -79,6 +110,18 @@ const findMinIteration = () => {
     cMin = findMin(cMinArr);
     if(typeof cMin !== 'undefined' && cMin.length > 0) {
         findNum(...cMin);
+    }
+}
+
+const newOn = (u, v, c) => {
+    for (let i=0; i<3; i++) {
+        for (let j=0; j<5; j++) {
+            if(!(isNaN(c[i][j]))) {
+                if((v[j]) === 'undefined') {
+                    v[j] = c[i][j] - u[i]
+                }
+            }
+        }
     }
 }
 
@@ -226,20 +269,17 @@ async function log() {
             console.log(c);
             findMinIteration();
             nonSingularity();
-            console.log(c1Final);
-            console.log(c2Final);
-            console.log(c3Final);
-            createU(u, 3);
-            createV(v, 5);
-            v[0] = c[0][0] - u[0];
-            v[1] = c[0][1] - u[0];
-            u[1] = c[1][1] - v[1];
-            v[2] = c[1][2] - u[1];
-            v[4] = c[0][4] - u[0];
-            u[2] = c[2][4] - v[4];
-            v[3] = c[2][3] - u[2];
-
-
+            sortArrays(c1Final);
+            sortArrays(c2Final);
+            sortArrays(c3Final);
+            createBetterArr(table);
+            createTable(c1Final, table, 0);
+            createTable(c2Final, table, 1);
+            createTable(c3Final, table, 2);
+            console.log(table);
+            newOn(u, v, c);
+            console.log(u);
+            console.log(v);
         });
 }
 
