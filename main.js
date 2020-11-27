@@ -2,6 +2,7 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 const results = [];
+let val = 0;
 let sum1 = 0;
 let sum2 = 0;
 let c1 = [];
@@ -32,6 +33,9 @@ let d = [
 ];
 let cNew = [];
 u[0] = 0;
+let c1New = [];
+let c2New = [];
+let c3New = [];
 
 
 let matrica = [
@@ -39,27 +43,18 @@ let matrica = [
     []
 ]
 
-const createD = (arr, val1, val2) => {
-    for(let i = 0; i < val1; i++) {
-        for(let j = 0; j < val2; j++) {
-            arr[i][j] = v[j] + u[i] - c[i][j];
+
+const summa = (arr, arr2) => {
+    val = 0;
+    for(let i=0; i < arr.length; i++) {
+        for(let j=0; j < arr[i].length; j++) {
+            let pere = parseInt(arr[i][j], 10);
+            if(!(isNaN(pere))) {
+                val += (pere * arr2[i][j]);
+            }
         }
     }
 }
-
-const createUV = (u, v) => {
-    u[0] = 0;
-    for(let i = 0; i < 3; i++) {
-        for(let j = 0; j < 5; j++) {
-            v[j] = c[i][j] - u[i];
-        }
-    }
-}
-
-
-const newC = () => {
-}
-
 
 const sortArrays = (arr) => {
     arr.sort((a, b) => {
@@ -112,6 +107,7 @@ const findMinIteration = () => {
     }
 }
 
+
 const lineEdit = (lineNum) => {
     switch (lineNum) {
         case 1:
@@ -137,9 +133,7 @@ const lineEdit = (lineNum) => {
 
 const rowEdit = (index) => {
     for (let i=0; i<3; i++) {
-        c[0][index] = 'x';
-        c[1][index] = 'x';
-        c[2][index] = 'x';
+        c[i][index] = 'x';
     }
 }
 
@@ -147,7 +141,7 @@ const findD = (arr) => {
     for (let i=0; i<arr.length;i++) {
         for (let j=0; j<arr[i].length;j++) {
             if(arr[i][j] > 0) {
-                matrica[0][0] = arr[i][j];
+                matrica[0][0] = arr[i].indexOf(arr[i][j]);
             }
         }
     }
@@ -190,6 +184,13 @@ const terminator = (a, b, item) => {
         a[lineNum - 1] = 0;
         findMinIteration();
     }
+}
+
+const final = (table) => {
+    table[0][0] = table[0][0] - table[2][3];
+    table[2][0] += table[2][3];
+    table[0][3] += table[2][3];
+    table[2][3] = 0;
 }
 
 const isNum = (arr) => {
@@ -257,14 +258,16 @@ async function log() {
             c2.shift();
             c3 = createC(c3, 3);
             c3.shift();
+            c1New = c1.slice();
+            c2New = c2.slice();
+            c3New = c3.slice();
+            cNew = [c1New, c2New, c3New];
             c = [c1, c2, c3];
             createA();
             createB();
-            b.push();
             console.log(a);
             console.log(b);
             console.log(c);
-            cNew = [...c];
             v[0] = cNew[0][0] - u[0];
             v[1] = cNew[0][1] - u[0];
             u[1] = cNew[1][1] - v[1];
@@ -289,13 +292,17 @@ async function log() {
             createTable(c1Final, table, 0);
             createTable(c2Final, table, 1);
             createTable(c3Final, table, 2);
+            summa(table, cNew);
+            console.log(val);
             console.log(table);
             console.log(u);
             console.log(v);
-            console.log(cNew);
             console.log(d);
             console.log(matrica);
-
+            final(table);
+            console.log(table);
+            summa(table, cNew);
+            console.log(val);
         });
 }
 
